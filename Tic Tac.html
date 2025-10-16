@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac</title>
+  <style>
+    body {
+      background-color: aqua;
+      text-align: center;
+      justify-content: center;
+      display: flex;
+    }
+
+    .container {
+      height: 70vh;
+      display: flex;
+    }
+
+    .game {
+      height: 60vmin;
+      width: 60vmin;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5vmin;
+    }
+
+    .box {
+      height: 15vmin;
+      width: 15vmin;
+      border: none;
+      border-radius: 16px;
+      background-color: white;
+      font-size: 6vmin;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .resetbutton {
+      padding: 10px 30px;
+      border-radius: 10px;
+      background-color: black;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .msgContainer {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .msgContainer.show {
+      display: block;
+    }
+
+    .msgContainer p {
+      font-size: 25px;
+      font-weight: bold;
+      color: darkgreen;
+    }
+
+    #new-btn {
+      padding: 10px 25px;
+      border-radius: 8px;
+      border: none;
+      background-color: black;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Tic Tac</h1>
+    
+    <div class="msgContainer">
+      <p class="msg">WINNER</p>
+      <button id="new-btn">New Game</button>
+    </div>
+
+    <div class="container">
+      <div class="game">
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+      </div>
+    </div>
+
+    <button class="resetbutton">Reset</button>
+  </main>
+
+  <script>
+    const boxes = document.querySelectorAll(".box");
+    const reset = document.querySelector(".resetbutton");
+    const msg = document.querySelector(".msg");
+    const msgContainer = document.querySelector(".msgContainer");
+    const newBtn = document.querySelector("#new-btn");
+
+    let turn0 = true;
+
+    const winPatterns = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    boxes.forEach((box) => {
+      box.addEventListener("click", () => {
+        if (turn0) {
+          box.innerText = "X";
+          box.style.color = "blue";
+          turn0 = false;
+        } else {
+          box.innerText = "O";
+          box.style.color = "red";
+          turn0 = true;
+        }
+        box.disabled = true;
+        checkWinner();
+      });
+    });
+
+    const showWinner = (winner) => {
+      msg.innerText = `Congratulations! ${winner} is the Winner `;
+      msgContainer.classList.add("show");
+      boxes.forEach((b) => (b.disabled = true));
+    };
+
+    const checkWinner = () => {
+      for (let pattern of winPatterns) {
+        let pos1Val = boxes[pattern[0]].innerText;
+        let pos2Val = boxes[pattern[1]].innerText;
+        let pos3Val = boxes[pattern[2]].innerText;
+
+        if (pos1Val !== "" && pos2Val !== "" && pos3Val !== "") {
+          if (pos1Val === pos2Val && pos2Val === pos3Val) {
+            showWinner(pos1Val);
+          }
+        }
+      }
+    };
+
+    const resetGame = () => {
+      turn0 = true;
+      boxes.forEach((box) => {
+        box.innerText = "";
+        box.disabled = false;
+      });
+      msgContainer.classList.remove("show");
+    };
+
+    reset.addEventListener("click", resetGame);
+    newBtn.addEventListener("click", resetGame);
+  </script>
+</body>
+</html>
+
